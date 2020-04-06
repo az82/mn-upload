@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: mn-upload-ingress
+  annotations:
+    # kubernetes.io/ingress.class: "external"
+
+    # Unbound request body size
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    # Configuration voodoo to turn request buffering reliably off
+    nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      chunked_transfer_encoding off;
+
+    # These do not work as expected and lead to a broken request body
+#    nginx.ingress.kubernetes.io/client-body-buffer-size: "0"
+#    nginx.ingress.kubernetes.io/proxy-max-temp-file-size: "0"
+
+    # Longer timeouts
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-write-timeout: "600"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /upload
+            backend:
+              serviceName: mn-upload-service
+              servicePort: http

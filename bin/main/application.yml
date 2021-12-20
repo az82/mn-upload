@@ -1,3 +1,14 @@
 micronaut:
   application:
     name: mn-upload
+  server:
+    max-request-size: '100GB'
+    multipart:
+      max-file-size: '100GB'
+    netty:
+      # Setting this causes an OOM (damn Netty)
+      # Also, apparently it does not work as intended - this is merely the
+      # chunk size for processing, not the chunk size on the wire
+      # Default of 8KB is way to low
+      # Sync that to the buffer size in the upload controller
+      # max-chunk-size: 65536

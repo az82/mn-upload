@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: mn-upload-ingress
@@ -24,6 +24,9 @@ spec:
     - http:
         paths:
           - path: /upload
+            pathType: Prefix
             backend:
-              serviceName: mn-upload-service
-              servicePort: http
+              service:
+                name: mn-upload-service
+                port:
+                  number: 80
